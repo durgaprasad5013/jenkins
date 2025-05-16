@@ -2,112 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Durga Prasad - DevOps Engineer</title>
+  <title>Click the Circle Game</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f2f5;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background-color: #1e3a8a;
-      color: white;
-      padding: 20px;
+      font-family: sans-serif;
       text-align: center;
-    }
-
-    h1 {
+      background: #f0f0f0;
       margin: 0;
-      font-size: 2em;
+      padding: 20px;
     }
-
-    h2 {
+    h1 {
       color: #333;
     }
-
-    .container {
-      padding: 40px;
+    #score {
+      font-size: 24px;
+      margin: 20px;
     }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: white;
-    }
-
-    th, td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-
-    th {
-      background-color: #2563eb;
-      color: white;
-    }
-
-    tr:hover {
-      background-color: #f1f1f1;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      background-color: #e5e7eb;
-      margin-top: 40px;
+    #circle {
+      width: 50px;
+      height: 50px;
+      background-color: red;
+      border-radius: 50%;
+      position: absolute;
+      cursor: pointer;
+      transition: top 0.2s, left 0.2s;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Durga Prasad</h1>
-    <p>DevOps Engineer</p>
-  </header>
+  <h1>Click the Circle Game</h1>
+  <p id="score">Score: 0</p>
+  <div id="circle"></div>
 
-  <div class="container">
-    <h2>Listening Ports (Sample)</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Protocol</th>
-          <th>Local Address</th>
-          <th>Port</th>
-          <th>State</th>
-          <th>PID/Program</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>TCP</td>
-          <td>0.0.0.0</td>
-          <td>22</td>
-          <td>LISTEN</td>
-          <td>1234/sshd</td>
-        </tr>
-        <tr>
-          <td>TCP</td>
-          <td>0.0.0.0</td>
-          <td>8080</td>
-          <td>LISTEN</td>
-          <td>2345/java</td>
-        </tr>
-        <tr>
-          <td>UDP</td>
-          <td>0.0.0.0</td>
-          <td>53</td>
-          <td>LISTEN</td>
-          <td>567/named</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <script>
+    const circle = document.getElementById("circle");
+    const scoreDisplay = document.getElementById("score");
+    let score = 0;
 
-  <footer>
-    &copy; 2025 Durga Prasad. All rights reserved.
-  </footer>
+    function moveCircle() {
+      const x = Math.random() * (window.innerWidth - 60);
+      const y = Math.random() * (window.innerHeight - 60);
+      circle.style.left = x + "px";
+      circle.style.top = y + "px";
+    }
+
+    circle.addEventListener("click", () => {
+      score++;
+      scoreDisplay.textContent = "Score: " + score;
+      moveCircle();
+    });
+
+    // Initial position
+    moveCircle();
+  </script>
 
 </body>
 </html>
