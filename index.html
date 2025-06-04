@@ -1,59 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Guess the Number Game</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-            background: #f2f2f2;
-        }
-        h1 {
-            color: #333;
-        }
-        input[type=number], button {
-            padding: 10px;
-            font-size: 16px;
-            margin: 10px;
-        }
-        #result {
-            font-weight: bold;
-            color: #006600;
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Catch the Falling Object</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      background: #f0f0f0;
+    }
+  </style>
 </head>
 <body>
-    <h1>🎯 Guess the Number (1-100)</h1>
-    <p>Enter your guess below:</p>
-    <input type="number" id="guess" min="1" max="100">
-    <button onclick="checkGuess()">Guess</button>
-    <p id="result"></p>
 
-    <script>
-        const numberToGuess = Math.floor(Math.random() * 100) + 1;
-        let attempts = 0;
+<canvas id="gameCanvas" width="600" height="400"></canvas>
 
-        function checkGuess() {
-            const guess = parseInt(document.getElementById("guess").value);
-            const result = document.getElementById("result");
-            attempts++;
+<script>
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
 
-            if (guess === numberToGuess) {
-                result.innerHTML = `🎉 Correct! You guessed it in ${attempts} attempts.`;
-                result.style.color = "green";
-            } else if (guess < numberToGuess) {
-                result.innerHTML = "🔼 Too low! Try again.";
-                result.style.color = "orange";
-            } else if (guess > numberToGuess) {
-                result.innerHTML = "🔽 Too high! Try again.";
-                result.style.color = "orange";
-            } else {
-                result.innerHTML = "❌ Invalid input.";
-                result.style.color = "red";
-            }
-        }
-    </script
+  // Game variables
+  const player = {
+    width: 100,
+    height: 20,
+    x: canvas.width / 2 - 50,
+    y: canvas.height - 30,
+    speed: 10
+  };
+
+  const object = {
+    width: 20,
+    height: 20,
+    x: Math.random() * (canvas.width - 20),
+    y: 0,
+    speed: 5
+  };
+
+  let score = 0;
+  let keys = {};
+
+  // Key handlers
+  document.addEventListener("keydown", e => keys[e.key] = true);
+  document.addEventListener("keyup", e => keys[e.key] = false);
+
+  function drawPlayer() {
+    ctx.fillStyle = "#007bff";
+    ctx.fillRect(player.x, player.y, player.width, player.height);
+  }
+
+  function drawObject() {
+    ctx.fillStyle = "#ff4136";
+    ctx.fillRect(object.x, object.y, object.width, object.height);
+  }
+
+  function drawScore() {
+    ctx.fillStyle = "#000";
+    ctx.font = "20px Arial";
+    ctx.fillText("Score: " + score, 10, 25);
+  }
+
+  function update() {
+    // Move player
+    if (keys["ArrowLeft"] && player.x > 0) {
+      player.x -= player.speed;
+    }
+    if (keys["ArrowRight"] && player.x + player.width < canvas.width) {
+      player.x += player.speed;
+    }
+
+    // Move object
+    object.y += object.speed;
+
+    // Collision detection
+    if (
+      object.y + object.height >= player.y &&
+      object.x + object.width >= player.x &&
+      object.x <= player.x + player.width
+    ) {
+      score++;
+      object.y = 0;
+      object.x = Math.random() * (canvas.width - object.width);
+    }
+
+    // Reset object if missed
+    if (object.y > canvas.height) {
+      object.y = 0;
+      object.x = Math.random() * (canvas.width - object.width);
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawPlayer();
+    drawObject();
+    drawScore();
+  }
+
+  function gameLoop() {
+    update();
+    draw();
+    requestAnimationFrame(gameLoop);
+  }
+
+  gameLoop();
+</script>
+
+</body>
+</html>
 
